@@ -273,8 +273,7 @@ function UpdateResults(data, answer) {
             var classList = "results-div ";
             if (i === 0) classList += "results-sizer";
 
-            var firstMessage = document.aggregatedResults.speechToText[0].nBest[0].display
-
+            var firstMessage = document.aggregatedResults.piiToText
 
             var pathLower = path.toLowerCase();
 
@@ -347,7 +346,7 @@ function UpdateResults(data, answer) {
                             ${ resultContent}`
 
             var satisfied = document.aggregatedResults.openaiGeneric ? document.aggregatedResults.openaiGeneric[0].choices[0].message.content : "Satisfaction Not Found."
-            var summary = document.aggregatedResults.openaiSummarize ? document.aggregatedResults.openaiSummarize.choices[0].message.content : "No Summary Found"
+            var summary = document.aggregatedResults.openaiSummarize ? document.aggregatedResults.openaiSummarize[0].choices[0].message.content : "No Summary Found"
             if (pathLower.includes(".mp3") || pathLower.includes(".json") || pathLower.includes(".m4a")) {
                 previewAllContent = `
                     <h5>${firstMessage}</h5>
