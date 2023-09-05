@@ -23,13 +23,13 @@ function ShowDocument(id, index) {
 
             // Transcript Tab Content
             var transcriptContainerHTML = GetTranscriptHTML(result);
-            if (data.decodedPath.toLowerCase().includes(".htm")) {
-                fileContainerHTML = GetTranscriptHTML(result);
-            }
+            //if (data.decodedPath.toLowerCase().includes(".htm")) {
+            //    fileContainerHTML = GetTranscriptHTML(result);
+            //}
 
 
-            // Metadata Tab Content 
-            var metadataContainerHTML = GetMetadataHTML(result);
+            //// Metadata Tab Content 
+            //var metadataContainerHTML = GetMetadataHTML(result);
 
             var fileName = "File";
 
@@ -65,7 +65,7 @@ function ShowDocument(id, index) {
                 $('#transcript-viewer').html(transcriptContainerHTML);
             }
 
-            $('#metadata-viewer').html(metadataContainerHTML);
+            //$('#metadata-viewer').html(metadataContainerHTML);
 
             if (result.geoLocation !== null)
             {
@@ -182,7 +182,7 @@ function GetFileHTML(data, result) {
         var pathLower = path.toLowerCase();
 
         if (pathLower.includes(".json")) {
-            var txtHtml = JSON.stringify(result.Messages, null, 2);
+            var txtHtml = JSON.stringify(result.aggregatedResults.recognizePiiEntities.items[0].results.documents[0].redactedText, null, 2);
             fileContainerHTML = `<ul class="timeline"> ${getTimelineHtml(data)} </ul>`;
         }
         else if (pathLower.includes(".pdf")) {
@@ -269,41 +269,49 @@ function GetMapsHTML(result) {
 function GetTranscriptHTML(result) {
 
     var transcriptContainerHTML = '';
+    transcriptContainerHTML = '<div style="overflow-x:auto;"><table class="table table-hover table-striped table-bordered"><thead><tr><th>Original Content</th></tr></thead>';
+    transcriptContainerHTML += '<tbody>';
+    for (var doc of result.aggregatedResults.recognizePiiEntities.items[0].results.documents) {
+        transcriptContainerHTML += '<tr><td class="wrapword"><pre id="transcript-viewer-pre">' + doc.redactedText + '</pre></td></tr>';
+    }
+    //transcriptContainerHTML += '<tr><td class="wrapword"><pre id="transcript-viewer-pre">' + full_content + '</pre></td></tr>';
+    transcriptContainerHTML += '</tbody>';
+    transcriptContainerHTML += '</table></div>';
 
-    var full_content = "";
+    //var full_content = "";
 
-    // If we have merged content, let's use it.
-    if (result.merged_content) {
-        if (result.merged_content.length > 0) {
-            full_content = htmlDecode(result.merged_content.trim());
-        }
-    }
-    else
-    {
-        // otherwise, let's try getting the content -- although it won't have any image data.
-        full_content = result.content.trim();
-    }
+    //// If we have merged content, let's use it.
+    //if (result.merged_content) {
+    //    if (result.merged_content.length > 0) {
+    //        full_content = htmlDecode(result.merged_content.trim());
+    //    }
+    //}
+    //else
+    //{
+    //    // otherwise, let's try getting the content -- although it won't have any image data.
+    //    full_content = result.content.trim();
+    //}
 
-    if (full_content === null || full_content === "")
-    {
-        // not much to display
-        return null;
-    }
+    //if (full_content === null || full_content === "")
+    //{
+    //    // not much to display
+    //    return null;
+    //}
 
-    if (!!result.translated_text && result.translated_text !== null && result.language !== "en" ) {
-        transcriptContainerHTML = '<div style="overflow-x:auto;"><table class="table table-hover table-striped table-bordered"><thead><tr><th>Original Content</th><th>Translated (En)</th></tr></thead>';
-        transcriptContainerHTML += '<tbody>';
-        transcriptContainerHTML += '<tr><td class="wrapword" style="width:50%"><pre id="transcript-viewer-pre">' + full_content + '</pre></td><td class="wrapword"><pre>' + htmlDecode(result.translated_text.trim()) + '</pre></td></tr>';
-        transcriptContainerHTML += '</tbody>';
-        transcriptContainerHTML += '</table></div>';
-    }
-    else {
-        transcriptContainerHTML = '<div style="overflow-x:auto;"><table class="table table-hover table-striped table-bordered"><thead><tr><th>Original Content</th></tr></thead>';
-        transcriptContainerHTML += '<tbody>';
-        transcriptContainerHTML += '<tr><td class="wrapword"><pre id="transcript-viewer-pre">' + full_content + '</pre></td></tr>';
-        transcriptContainerHTML += '</tbody>';
-        transcriptContainerHTML += '</table></div>';
-    }
+    //if (!!result.translated_text && result.translated_text !== null && result.language !== "en" ) {
+    //    transcriptContainerHTML = '<div style="overflow-x:auto;"><table class="table table-hover table-striped table-bordered"><thead><tr><th>Original Content</th><th>Translated (En)</th></tr></thead>';
+    //    transcriptContainerHTML += '<tbody>';
+    //    transcriptContainerHTML += '<tr><td class="wrapword" style="width:50%"><pre id="transcript-viewer-pre">' + full_content + '</pre></td><td class="wrapword"><pre>' + htmlDecode(result.translated_text.trim()) + '</pre></td></tr>';
+    //    transcriptContainerHTML += '</tbody>';
+    //    transcriptContainerHTML += '</table></div>';
+    //}
+    //else {
+    //    transcriptContainerHTML = '<div style="overflow-x:auto;"><table class="table table-hover table-striped table-bordered"><thead><tr><th>Original Content</th></tr></thead>';
+    //    transcriptContainerHTML += '<tbody>';
+    //    transcriptContainerHTML += '<tr><td class="wrapword"><pre id="transcript-viewer-pre">' + full_content + '</pre></td></tr>';
+    //    transcriptContainerHTML += '</tbody>';
+    //    transcriptContainerHTML += '</table></div>';
+    //}
 
     return transcriptContainerHTML;
 }

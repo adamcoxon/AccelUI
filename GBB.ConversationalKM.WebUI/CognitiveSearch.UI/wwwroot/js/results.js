@@ -273,7 +273,7 @@ function UpdateResults(data, answer) {
             var classList = "results-div ";
             if (i === 0) classList += "results-sizer";
 
-            var firstMessage = document.aggregatedResults.piiToText
+            var firstMessage = document.aggregatedResults.recognizePiiEntities.items[0].results.documents[0].redactedText
 
             var pathLower = path.toLowerCase();
 
@@ -345,14 +345,14 @@ function UpdateResults(data, answer) {
                             ${ tagsContent }
                             ${ resultContent}`
 
-            var satisfied = document.aggregatedResults.openaiGeneric ? document.aggregatedResults.openaiGeneric[0].choices[0].message.content : "Satisfaction Not Found."
-            var summary = document.aggregatedResults.openaiSummarize ? document.aggregatedResults.openaiSummarize[0].choices[0].message.content : "No Summary Found"
+            var summary = JSON.parse(document.aggregatedResults.openaiRest[0])[0].choices[0].message.content
+            //var summary = document.aggregatedResults.openaiSummarize ? document.aggregatedResults.openaiSummarize[0].choices[0].message.content : "No Summary Found"
             if (pathLower.includes(".mp3") || pathLower.includes(".json") || pathLower.includes(".m4a")) {
                 previewAllContent = `
                     <h5>${firstMessage}</h5>
                     <b>${moment(document.StartTime).format("LLL")}</b>
                     <h4>Summary: ${summary}</h4>
-                    <h4>Customer satisfied: ${satisfied}</h4>
+              
                     <div style="margin-top:10px;">${tags}</div>`
             }
 
